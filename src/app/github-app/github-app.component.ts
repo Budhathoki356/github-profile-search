@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { GithubService } from '../github.service';
 
 @Component({
@@ -12,12 +13,20 @@ export class GithubAppComponent implements OnInit {
   public githubProfile: any;
   public githubRepos: any[];
 
-  constructor(private githubService: GithubService) { }
+  constructor(
+    private ngxSpinner: NgxSpinnerService,
+    private githubService: GithubService) { }
 
   ngOnInit(): void {
+    this.ngxSpinner.show();
+
+    setTimeout(()=>{
+      this.ngxSpinner.hide()
+    },1000)
   }
 
   public searchUser() {
+    this.ngxSpinner.show()
     this.githubService.gitProfile(this.githubUserQuery).subscribe((data) => {
       this.githubProfile = data
     })
@@ -25,6 +34,7 @@ export class GithubAppComponent implements OnInit {
     // get github repos
     this.githubService.gitRepos(this.githubUserQuery).subscribe((data) => {
       this.githubRepos = data
+      this.ngxSpinner.hide()
     })
   }
 
